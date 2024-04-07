@@ -1,8 +1,8 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+-this project is about making websites that communicate with apollo/server using apollo/client.
+-apolloclient is state management library for javascript that enables to manage both local and remote data using graphQL 
+-data is fetcheced using useQuery hook, changes are done using mutation.
+-queries are created accordingly to get required data only
+- data that are fetched is saved in cache (InMemoryCache)
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
