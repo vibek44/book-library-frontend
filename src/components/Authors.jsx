@@ -1,5 +1,5 @@
 import EditAuthor from './EditAuthor'
-const Authors=({ authors,handleNotify }) => {
+const Authors=({ authors,handleNotify,token }) => {
   return(
     <div>
       <table>
@@ -18,7 +18,7 @@ const Authors=({ authors,handleNotify }) => {
           }
         </tbody>
       </table>
-      <EditAuthor handleNotify={handleNotify} authors={authors}/>
+      {token && <EditAuthor handleNotify={handleNotify} authors={authors}/>}
     </div>)
 
 }
