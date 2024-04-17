@@ -1,4 +1,5 @@
 import { useState ,useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { ADD_BOOK, ALL_BOOKS,ALL_AUTHORS } from '../queries'
 
@@ -9,10 +10,16 @@ const AddBookForm=({ handleNotify }) => {
   const [published, setPublished] = useState('')
   const [genre,setGenre]=useState('')
   const [genres,setGenres]=useState([])
+  const navigate=useNavigate()
   const [ addBook,result ] = useMutation(ADD_BOOK,{
-    refetchQueries:[{ query:ALL_BOOKS },{ query:ALL_AUTHORS }]
-  })
-
+    refetchQueries:[{ query:ALL_BOOKS },{ query:ALL_AUTHORS }],
+    onError:(error) => {
+      const message=error.graphQLErrors.map(e => e.message).join('\n')
+      handleNotify(message)
+    },
+  },
+  )
+  //console.log(result.error);
   const submit = (event) => {
     event.preventDefault()
     if(!(title&&author&&published)){
@@ -20,10 +27,7 @@ const AddBookForm=({ handleNotify }) => {
       return
     }
     addBook({ variables: { title, author,published:Number(published),genres } })
-    setTitle('')
-    setAuthor('')
-    setPublished('')
-    setGenres([])
+    navigate('/books')
   }
 
   return (
