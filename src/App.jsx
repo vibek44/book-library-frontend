@@ -23,8 +23,9 @@ const App=() => {
   const navigate=useNavigate()
   const client=useApolloClient()
   const resultBooks=useQuery(ALL_BOOKS,{
-    variables:{ selectGenre }
+    variables:{ selectGenre }   //variable here needs to match query def variable
   })
+  console.log(resultBooks)
   const resultUser=useQuery(ME,{
     variables:{ token },
     skip:!token
@@ -32,6 +33,10 @@ const App=() => {
   const userBooks =resultUser.data ? resultBooks.data.allBooks.filter(book => book.genres.includes(resultUser.data.me.favoriteGenre)) :null
   //console.log(userBooks)
   const handleGenre= ({ target }) => {
+    if ( target.value==='all'){
+      setSelectGenre(null)
+      return
+    }
     setSelectGenre(target.value)
   }
 
