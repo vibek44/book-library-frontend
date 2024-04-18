@@ -10,19 +10,31 @@ import Books from './components/Books'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import AddBookForm from './components/AddBookForm'
+import   UserInterest  from './components/UserInterest'
 import { useQuery,useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS ,ALL_BOOKS,ME } from './queries'
 
 
 const App=() => {
   const result =useQuery(ALL_AUTHORS)
-  const resultBooks=useQuery(ALL_BOOKS)
-  const resultUser=useQuery(ME)
+  const [selectGenre,setSelectGenre]=useState(null)
   const [token,setToken]=useState(null)
   const [errorMessage ,setErrorMessage]=useState('')
   const navigate=useNavigate()
   const client=useApolloClient()
-  //console.log(resultUser)
+  const resultBooks=useQuery(ALL_BOOKS,{
+    variables:{ selectGenre }
+  })
+  const resultUser=useQuery(ME,{
+    variables:{ token },
+    skip:!token
+  })
+  const userBooks =resultUser.data ? resultBooks.data.allBooks.filter(book => book.genres.includes(resultUser.data.me.favoriteGenre)) :null
+  //console.log(userBooks)
+  const handleGenre= ({ target }) => {
+    setSelectGenre(target.value)
+  }
+
   const notify =( message ) => {
     setErrorMessage(message)
     setTimeout(() => {
@@ -47,8 +59,9 @@ const App=() => {
       <MenuLink token={token} logout={logout}/>
       <Routes>
         <Route path='/addbook' element={<AddBookForm handleNotify={notify}/>}/>
+        <Route path='/usersfavorite' element={<UserInterest books={userBooks}/>}/>
         <Route path='/authors' element={<Authors authors={result.data.allAuthors } handleNotify={notify} token={token} />}/>
-        <Route path='/books' element={<Books books={resultBooks.data.allBooks} handleNotify={notify}/>}/>
+        <Route path='/books' element={<Books books={resultBooks.data.allBooks} handleNotify={notify} handleGenre={handleGenre}/>}/>
         <Route path='/login' element={<LoginForm  handleNotify={ notify } setToken={setToken} token={token}/>}/>
         <Route path='/' element={<Home/>}/>
       </Routes>
