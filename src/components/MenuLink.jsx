@@ -9,7 +9,7 @@ const MenuLink = ({ token,logout }) => {
     <Link to ='/authors' style={Style}> Authors </Link>
     <Link to='/books' style={Style}> Books</Link>
     { token
-      ? <><Link to='/addbook'> addbook </Link> <button onClick={logout}>logout</button></>
+      ? <><Link to='/addbook'> addbook </Link><Link to='/usersFavorite' style={Style}>recommended</Link> <button onClick={logout}>logout</button></>
       :<Link to='/login' style={Style}>login</Link>
     }
   </div>)
