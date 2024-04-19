@@ -7,5 +7,5 @@
 - data that are fetched is saved in cache (InMemoryCache)
 -subscription needs to be used only when
 1 small, incremental changes to objects
-2low latency real time update eg chat app
+2 low latency real time update eg chat app
 
