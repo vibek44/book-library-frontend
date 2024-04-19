@@ -21,6 +21,7 @@ module.exports = {
     "object-curly-spacing": ["error", "always"],
     "arrow-spacing": ["error", { before: true, after: true }],
     'react/jsx-no-target-blank': 'off',
+    "react/prop-types":"off",
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
