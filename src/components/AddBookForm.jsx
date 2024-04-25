@@ -2,6 +2,7 @@ import { useState ,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@apollo/client'
 import { ADD_BOOK, ALL_BOOKS,ALL_AUTHORS } from '../queries'
+import { updateCache } from '../helper'
 
 const AddBookForm=({ handleNotify }) => {
 
@@ -12,11 +13,14 @@ const AddBookForm=({ handleNotify }) => {
   const [genres,setGenres]=useState([])
   const navigate=useNavigate()
   const [ addBook,result ] = useMutation(ADD_BOOK,{
-    refetchQueries:[{ query:ALL_BOOKS },{ query:ALL_AUTHORS }],
+    refetchQueries:[{ query:ALL_AUTHORS }],
     onError:(error) => {
       const message=error.graphQLErrors.map(e => e.message).join('\n')
       handleNotify(message)
     },
+    update:(cache, response) => {
+      updateCache(cache,{ query:ALL_BOOKS },response.data.addBook)
+    }
   },
   )
   //console.log(result.error);
