@@ -11,29 +11,31 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import AddBookForm from './components/AddBookForm'
 import   UserInterest  from './components/UserInterest'
-import { useQuery,useApolloClient } from '@apollo/client'
-import { ALL_AUTHORS ,ALL_BOOKS,ME } from './queries'
+import { useQuery,useApolloClient,useSubscription } from '@apollo/client'
+import { ALL_AUTHORS ,ALL_BOOKS,ME,BOOK_ADDED } from './queries'
+import { updateCache } from './helper'
 
 
 const App=() => {
   const result =useQuery(ALL_AUTHORS)
-  
   const [token,setToken]=useState(null)
   const [errorMessage ,setErrorMessage]=useState('')
   const navigate=useNavigate()
   const client=useApolloClient()
+  useSubscription(BOOK_ADDED,{
+    onData:({ data,client }) => {
+      const bookAdded=data.data.bookAdded
+      notify(`${bookAdded.title} added `)
+      updateCache(client.cache, { query:ALL_BOOKS }, bookAdded)
+    }
+  })
   const resultBooks=useQuery(ALL_BOOKS)
-  //console.log(resultBooks)
   const resultUser=useQuery(ME,{
     variables:{ token },
     skip:!token
   })
-  //console.log(data);
-
   const userBooks =resultUser.data ? resultBooks.data.allBooks.filter(book => book.genres.includes(resultUser.data.me.favoriteGenre)) :null
   //console.log(resultUser)
-
-
   const notify =( message ) => {
     setErrorMessage(message)
     setTimeout(() => {
